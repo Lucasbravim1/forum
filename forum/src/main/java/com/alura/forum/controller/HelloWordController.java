@@ -12,6 +12,6 @@ public class HelloWordController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ResponseBody
 	public String hello() {
-		return "That's it !";
+		return "That's it !!!";
 	}
 }
