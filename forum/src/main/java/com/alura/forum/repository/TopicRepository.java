@@ -1,14 +1,16 @@
 package com.alura.forum.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.repository.Repository;
 
 import com.alura.forum.model.Topic;
 
 @org.springframework.stereotype.Repository
-public interface TopicRepository extends Repository<Topic,Long>{
+public interface TopicRepository extends Repository<Topic, Long> {
 
-	 Optional<Topic> findById(Long id);
+	Topic findById(Long id);
+
+	List<Topic> findAll();
 
 }
