@@ -1,6 +1,7 @@
 package com.alura.forum.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,12 +27,17 @@ public class Topic {
 
 	private LocalDate openingDate;
 
-	private String userRequest;
+	@ManyToOne
+	private User userRequest;
 
-	private String userSolved;
+	@ManyToOne
+	private User userSolved;
 
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.OPEN;
+
+	@OneToMany(mappedBy = "topic")
+	private List<Answer> answers;
 
 	public Topic() {
 
@@ -67,19 +75,19 @@ public class Topic {
 		this.openingDate = openingDate;
 	}
 
-	public String getUserRequest() {
+	public User getUserRequest() {
 		return userRequest;
 	}
 
-	public void setUserRequest(String userRequest) {
+	public void setUserRequest(User userRequest) {
 		this.userRequest = userRequest;
 	}
 
-	public String getUserSolved() {
+	public User getUserSolved() {
 		return userSolved;
 	}
 
-	public void setUserSolved(String userSolved) {
+	public void setUserSolved(User userSolved) {
 		this.userSolved = userSolved;
 	}
 
@@ -90,4 +98,13 @@ public class Topic {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
+
 }

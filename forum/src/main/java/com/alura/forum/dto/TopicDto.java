@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alura.forum.model.Answer;
 import com.alura.forum.model.Status;
 import com.alura.forum.model.Topic;
 
@@ -15,11 +16,13 @@ public class TopicDto {
 
 	private LocalDate openingDate;
 
-	private String userRequest;
+	private UserDto userRequest;
 
-	private String userSolved;
+	private UserDto userSolved;
 
 	private Status status;
+
+	private List<AnswerDto> answers;
 
 	public TopicDto() {
 
@@ -27,13 +30,22 @@ public class TopicDto {
 
 	public TopicDto(Topic topic) {
 
+		UserDto userDtoRequest = new UserDto(topic.getUserRequest());
+		UserDto userDtoSolved = new UserDto(topic.getUserSolved());
+		
+		AnswerDto answerDto = new AnswerDto();
+		List<Answer> answers = topic.getAnswers();
+
 		this.category = topic.getCategory();
 		this.description = topic.getDescription();
 		this.openingDate = topic.getOpeningDate();
-		this.userRequest = topic.getUserRequest();
-		this.userSolved = topic.getUserSolved();
 		this.status = topic.getStatus();
+		this.userRequest = userDtoRequest;
+		this.userSolved = userDtoSolved;
+		this.answers 	= answerDto.toAnswer(answers);
+
 	}
+
 
 	public String getCategory() {
 		return category;
@@ -59,19 +71,19 @@ public class TopicDto {
 		this.openingDate = openingDate;
 	}
 
-	public String getUserRequest() {
+	public UserDto getUserRequest() {
 		return userRequest;
 	}
 
-	public void setUserRequest(String userRequest) {
+	public void setUserRequest(UserDto userRequest) {
 		this.userRequest = userRequest;
 	}
 
-	public String getUserSolved() {
+	public UserDto getUserSolved() {
 		return userSolved;
 	}
 
-	public void setUserSolved(String userSolved) {
+	public void setUserSolved(UserDto userSolved) {
 		this.userSolved = userSolved;
 	}
 
@@ -81,6 +93,14 @@ public class TopicDto {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public List<AnswerDto> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<AnswerDto> answersDtos) {
+		this.answers = answersDtos;
 	}
 
 	public List<TopicDto> toTopic(List<Topic> topic) {

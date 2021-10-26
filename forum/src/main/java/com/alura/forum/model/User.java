@@ -28,6 +28,10 @@ public class User {
 
 	private Integer solvedTopics;
 
+	public User() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}
