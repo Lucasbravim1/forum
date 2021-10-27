@@ -21,7 +21,10 @@ public class Topic {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String category;
+	@Enumerated(EnumType.STRING)
+	private Category category;
+
+	private String subCategory;
 
 	private String description;
 
@@ -30,8 +33,6 @@ public class Topic {
 	@ManyToOne
 	private User userRequest;
 
-	@ManyToOne
-	private User userSolved;
 
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.OPEN;
@@ -51,12 +52,20 @@ public class Topic {
 		this.id = id;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public String getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
 	}
 
 	public String getDescription() {
@@ -83,13 +92,6 @@ public class Topic {
 		this.userRequest = userRequest;
 	}
 
-	public User getUserSolved() {
-		return userSolved;
-	}
-
-	public void setUserSolved(User userSolved) {
-		this.userSolved = userSolved;
-	}
 
 	public Status getStatus() {
 		return status;

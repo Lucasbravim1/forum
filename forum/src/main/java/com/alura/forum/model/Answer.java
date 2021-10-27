@@ -1,8 +1,11 @@
 package com.alura.forum.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,13 +22,16 @@ public class Answer {
 
 	private String respond;
 
-	private LocalDateTime date;
+	private LocalDate date;
 
 	@ManyToOne
 	private User user;
 
 	@ManyToOne
 	private Topic topic;
+
+	@Enumerated(EnumType.STRING)
+	private AnswerSolution answerSolution;
 
 	public Answer() {
 
@@ -47,11 +53,11 @@ public class Answer {
 		this.respond = respond;
 	}
 
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -69,6 +75,14 @@ public class Answer {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
+	}
+
+	public AnswerSolution getAnswerSolution() {
+		return answerSolution;
+	}
+
+	public void setAnswerSolution(AnswerSolution answerSolution) {
+		this.answerSolution = answerSolution;
 	}
 
 }

@@ -1,21 +1,25 @@
 package com.alura.forum.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.alura.forum.model.Answer;
+import com.alura.forum.model.AnswerSolution;
 
 public class AnswerDto {
 
 	private String respond;
 
-	private LocalDateTime date;
+	private LocalDate date;
 
 	private UserDto userDto;
-	
+
+	private AnswerSolution answerSolution;
+
 	public AnswerDto() {
-		
+
 	}
 
 	public AnswerDto(Answer answer) {
@@ -25,6 +29,7 @@ public class AnswerDto {
 		this.respond = answer.getRespond();
 		this.date = answer.getDate();
 		this.userDto = userDto;
+		this.answerSolution = answer.getAnswerSolution();
 	}
 
 	public String getRespond() {
@@ -35,11 +40,11 @@ public class AnswerDto {
 		this.respond = respond;
 	}
 
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -51,7 +56,15 @@ public class AnswerDto {
 		this.userDto = user;
 	}
 
-	public  List<AnswerDto> toAnswer(List<Answer> answers) {
+	public AnswerSolution getAnswerSolution() {
+		return answerSolution;
+	}
+
+	public void setAnswerSolution(AnswerSolution answerSolution) {
+		this.answerSolution = answerSolution;
+	}
+
+	public List<AnswerDto> toAnswer(List<Answer> answers) {
 
 		List<AnswerDto> list = new ArrayList<>();
 

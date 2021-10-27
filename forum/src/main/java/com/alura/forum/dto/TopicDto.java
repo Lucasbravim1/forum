@@ -1,24 +1,27 @@
 package com.alura.forum.dto;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.alura.forum.model.Answer;
+import com.alura.forum.model.AnswerSolution;
+import com.alura.forum.model.Category;
 import com.alura.forum.model.Status;
 import com.alura.forum.model.Topic;
 
 public class TopicDto {
 
-	private String category;
+	private Category category;
+
+	private String subCategory;
 
 	private String description;
 
 	private LocalDate openingDate;
 
 	private UserDto userRequest;
-
-	private UserDto userSolved;
 
 	private Status status;
 
@@ -31,28 +34,34 @@ public class TopicDto {
 	public TopicDto(Topic topic) {
 
 		UserDto userDtoRequest = new UserDto(topic.getUserRequest());
-		UserDto userDtoSolved = new UserDto(topic.getUserSolved());
-		
+
 		AnswerDto answerDto = new AnswerDto();
 		List<Answer> answers = topic.getAnswers();
 
 		this.category = topic.getCategory();
+		this.subCategory = topic.getSubCategory();
 		this.description = topic.getDescription();
 		this.openingDate = topic.getOpeningDate();
-		this.status = topic.getStatus();
 		this.userRequest = userDtoRequest;
-		this.userSolved = userDtoSolved;
-		this.answers 	= answerDto.toAnswer(answers);
+		this.answers = answerDto.toAnswer(answers);
+		this.status = isSolved(this.answers);
 
 	}
 
-
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public String getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
 	}
 
 	public String getDescription() {
@@ -79,14 +88,6 @@ public class TopicDto {
 		this.userRequest = userRequest;
 	}
 
-	public UserDto getUserSolved() {
-		return userSolved;
-	}
-
-	public void setUserSolved(UserDto userSolved) {
-		this.userSolved = userSolved;
-	}
-
 	public Status getStatus() {
 		return status;
 	}
@@ -99,8 +100,8 @@ public class TopicDto {
 		return answers;
 	}
 
-	public void setAnswers(List<AnswerDto> answersDtos) {
-		this.answers = answersDtos;
+	public void setAnswers(List<AnswerDto> answers) {
+		this.answers = answers;
 	}
 
 	public List<TopicDto> toTopic(List<Topic> topic) {
@@ -115,6 +116,29 @@ public class TopicDto {
 		}
 
 		return list;
+
+	}
+
+	public Status isSolved(List<AnswerDto> answers) {
+
+		Status status = null;
+
+		if (answers.size() != 0) {
+
+			for (int i = 0; i < answers.size(); i++) {
+
+				if (answers.get(i).getAnswerSolution() == AnswerSolution.YES) {
+					status = Status.SOLVED;
+				}
+
+				else {
+					status = Status.OPEN;
+				}
+			}
+		} else {
+			status = Status.NO_REPLY;
+		}
+		return status;
 
 	}
 

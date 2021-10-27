@@ -3,6 +3,6 @@ package com.alura.forum.model;
 public enum Status {
 
 	OPEN,
-	ANSWERED,
+	NO_REPLY,
 	SOLVED
 }
