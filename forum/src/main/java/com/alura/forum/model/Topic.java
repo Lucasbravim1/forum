@@ -15,8 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.alura.forum.dto.TopicDto;
-import com.alura.forum.dto.UserDto;
-import com.alura.forum.repository.UserRepository;
 
 @Entity
 @Table(name = "topics")
@@ -48,14 +46,14 @@ public class Topic {
 
 	}
 
-	public Topic(TopicDto topicDto, UserRepository userRepository) {
+	public Topic(TopicDto topicDto, User user) {
 
 		this.category = topicDto.getCategory();
 		this.subCategory = topicDto.getSubCategory();
 		this.description = topicDto.getDescription();
 		this.openingDate = topicDto.getOpeningDate();
 		this.status = topicDto.getStatus();
-		this.userRequest = userRepository.findByEmail(topicDto.getUserRequest().getEmail());
+		this.userRequest = user;
 
 	}
 

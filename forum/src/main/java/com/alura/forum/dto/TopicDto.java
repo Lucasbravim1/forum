@@ -3,17 +3,12 @@ package com.alura.forum.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alura.forum.model.Answer;
 import com.alura.forum.model.AnswerSolution;
 import com.alura.forum.model.Category;
 import com.alura.forum.model.Status;
 import com.alura.forum.model.Topic;
-import com.alura.forum.model.User;
-import com.alura.forum.repository.UserRepository;
 
 public class TopicDto {
 
@@ -30,9 +25,6 @@ public class TopicDto {
 	private Status status;
 
 	private List<AnswerDto> answers;
-
-	@Autowired
-	private UserRepository userRepository;
 
 	public TopicDto() {
 

@@ -1,13 +1,20 @@
 package com.alura.forum.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.alura.forum.model.Category;
 
 public class RegisterTopicDto {
 
 	private Category category;
 
+	@NotBlank
+	@NotNull
 	private String subCategory;
 
+	@NotBlank
+	@NotNull
 	private String description;
 
 	private UserDto userRequest;

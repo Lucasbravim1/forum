@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.alura.forum.dto.TopicDto;
 import com.alura.forum.dto.UserDto;
 
 @Entity
