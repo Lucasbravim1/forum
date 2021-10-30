@@ -1,15 +1,19 @@
 package com.alura.forum.dto;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alura.forum.model.Answer;
 import com.alura.forum.model.AnswerSolution;
 import com.alura.forum.model.Category;
 import com.alura.forum.model.Status;
 import com.alura.forum.model.Topic;
+import com.alura.forum.model.User;
+import com.alura.forum.repository.UserRepository;
 
 public class TopicDto {
 
@@ -26,6 +30,9 @@ public class TopicDto {
 	private Status status;
 
 	private List<AnswerDto> answers;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	public TopicDto() {
 
@@ -46,6 +53,15 @@ public class TopicDto {
 		this.answers = answerDto.toAnswer(answers);
 		this.status = isSolved(this.answers);
 
+	}
+
+	public TopicDto(RegisterTopicDto registerTopicDto) {
+		this.category = registerTopicDto.getCategory();
+		this.subCategory = registerTopicDto.getSubCategory();
+		this.description = registerTopicDto.getDescription();
+		this.openingDate = LocalDate.now();
+		this.status = Status.NO_REPLY;
+		this.userRequest = registerTopicDto.getUserRequest();
 	}
 
 	public Category getCategory() {
@@ -104,7 +120,7 @@ public class TopicDto {
 		this.answers = answers;
 	}
 
-	public List<TopicDto> toTopic(List<Topic> topic) {
+	public List<TopicDto> toTopicDto(List<Topic> topic) {
 
 		List<TopicDto> list = new ArrayList<>();
 
@@ -120,8 +136,6 @@ public class TopicDto {
 	}
 
 	public Status isSolved(List<AnswerDto> answers) {
-
-		Status status = null;
 
 		if (answers.size() != 0) {
 
@@ -140,6 +154,13 @@ public class TopicDto {
 		}
 		return status;
 
+	}
+
+	@Override
+	public String toString() {
+		return "TopicDto [category=" + category + ", subCategory=" + subCategory + ", description=" + description
+				+ ", openingDate=" + openingDate + ", userRequest=" + userRequest + ", status=" + status + ", answers="
+				+ answers + "]";
 	}
 
 }

@@ -10,6 +10,10 @@ public class UserDto {
 
 	private String email;
 
+	public UserDto() {
+
+	}
+
 	public UserDto(User user) {
 		this.name = user.getName();
 		this.age = user.getAge();
@@ -39,6 +43,11 @@ public class UserDto {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto [name=" + name + ", age=" + age + ", email=" + email + "]";
 	}
 
 }

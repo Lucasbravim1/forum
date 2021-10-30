@@ -1,12 +1,15 @@
 package com.alura.forum.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.alura.forum.dto.TopicDto;
+import com.alura.forum.dto.UserDto;
 
 @Entity
 @Table(name = "users")
@@ -24,12 +27,18 @@ public class User {
 
 	private String email;
 
-	private LocalDateTime entryDate;
+	private LocalDate entryDate;
 
 	private Integer solvedTopics;
 
 	public User() {
 
+	}
+
+	public User(UserDto userDto) {
+		this.name = userDto.getName();
+		this.age = userDto.getAge();
+		this.email = userDto.getEmail();
 	}
 
 	public Long getId() {
@@ -72,11 +81,11 @@ public class User {
 		this.email = email;
 	}
 
-	public LocalDateTime getEntryDate() {
+	public LocalDate getEntryDate() {
 		return entryDate;
 	}
 
-	public void setEntryDate(LocalDateTime entryDate) {
+	public void setEntryDate(LocalDate entryDate) {
 		this.entryDate = entryDate;
 	}
 
@@ -87,5 +96,12 @@ public class User {
 	public void setSolvedTopics(Integer solvedTopics) {
 		this.solvedTopics = solvedTopics;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", password=" + password + ", age=" + age + ", email=" + email
+				+ ", entryDate=" + entryDate + ", solvedTopics=" + solvedTopics + "]";
+	}
+
 
 }
