@@ -5,10 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.alura.forum.model.Category;
 import com.alura.forum.model.Topic;
 
 @org.springframework.stereotype.Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
+
+	Optional<Topic> findByCategory(Category category);
 
 	Optional<Topic> findById(Long id);
 	

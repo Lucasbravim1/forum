@@ -7,12 +7,13 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -75,4 +76,35 @@ public class TopicRestController {
 
 	}
 
+	@RequestMapping(value = "/delete{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteTopic(@RequestParam Long id) {
+
+		Optional<Topic> topic = topicRepository.findById(id);
+		if (!topic.isEmpty()) {
+			topicRepository.delete(topic.get());
+			return new ResponseEntity<String>("Topic has been deleted", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("No Topic Found", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@RequestMapping(value = "/update{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateTopic(@RequestBody @Valid RegisterTopicDto registerTopicDto, @RequestParam Long id) {
+
+		Optional<Topic> optionalTopic = topicRepository.findById(id);
+		if (!optionalTopic.isEmpty()) {
+			Topic topic = optionalTopic.get();
+			topic.setCategory(registerTopicDto.getCategory());
+			topic.setDescription(registerTopicDto.getDescription());
+			topic.setSubCategory(registerTopicDto.getSubCategory());
+
+			topicRepository.save(topic);
+			return new ResponseEntity<String>("Topic updated successfully", HttpStatus.OK);
+		}
+
+		else {
+			return new ResponseEntity<String>("Topic with id = " + id + " not found", HttpStatus.NOT_FOUND);
+
+		}
+	}
 }
