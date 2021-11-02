@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,16 +33,16 @@ public class TopicRestController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/search/{id}", method = RequestMethod.GET)
-	public TopicDto searchTopic(@PathVariable(value = "id") Long id) {
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public ResponseEntity<?> searchTopic(@RequestParam(value = "id") @Valid Long id) {
 
 		Optional<Topic> topic = topicRepository.findById(id);
 
 		if (!topic.isEmpty()) {
 			TopicDto topicDto = new TopicDto(topic.get());
-			return topicDto;
+			return ResponseEntity.ok(topicDto);
 		}
-		return null;
+		return new ResponseEntity<>("Topic Not Found !", HttpStatus.NOT_FOUND);
 
 	}
 

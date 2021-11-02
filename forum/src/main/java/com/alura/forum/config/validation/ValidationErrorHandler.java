@@ -9,6 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,7 +24,7 @@ public class ValidationErrorHandler {
 	
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public List<NullPointerValidationDto> handle(MethodArgumentNotValidException exception) {
+	public List<NullPointerValidationDto> nullPointerHandle(MethodArgumentNotValidException exception) {
 		
 		List<NullPointerValidationDto> errors = new ArrayList<>();
 		List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
@@ -35,5 +36,13 @@ public class ValidationErrorHandler {
 		}
 		return errors;
 
+	}
+	
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public String nullIdHandle(MissingServletRequestParameterException exception){
+		
+		return "The id must no be null";
+		
 	}
 }
