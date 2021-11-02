@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.alura.forum.model.Answer;
 import com.alura.forum.model.AnswerSolution;
 import com.alura.forum.model.Category;
@@ -145,6 +147,22 @@ public class TopicDto {
 			status = Status.NO_REPLY;
 		}
 		return status;
+
+	}
+
+	public List<TopicDto> toTopicDto(Page<Topic> page) {
+
+		List<TopicDto> list = new ArrayList<>();
+		List<Topic> content = page.getContent();
+
+
+		for (int i = 0; i < page.getNumberOfElements(); i++) {
+
+			TopicDto topicDto = new TopicDto(content.get(i));
+			list.add(topicDto);
+		}
+		
+		return list;
 
 	}
 

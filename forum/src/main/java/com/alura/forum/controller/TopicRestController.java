@@ -7,6 +7,10 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +28,7 @@ import com.alura.forum.repository.TopicRepository;
 import com.alura.forum.repository.UserRepository;
 
 @RestController
-@RequestMapping(value = "topic")
+@RequestMapping(value = "/topic")
 public class TopicRestController {
 
 	@Autowired
@@ -47,9 +51,11 @@ public class TopicRestController {
 	}
 
 	@RequestMapping(value = "/search/all", method = RequestMethod.GET)
-	public List<TopicDto> searchAllTopics() {
+	public List<TopicDto> searchAllTopics(@RequestParam String orderBy, @RequestParam Integer page, @RequestParam Integer quantity) {
+		
+		Pageable pageable = PageRequest.of(page, quantity, Direction.DESC, orderBy);
 
-		List<Topic> list = topicRepository.findAll();
+		Page<Topic> list = topicRepository.findAll(pageable);
 		TopicDto topicDto = new TopicDto();
 
 		return topicDto.toTopicDto(list);
