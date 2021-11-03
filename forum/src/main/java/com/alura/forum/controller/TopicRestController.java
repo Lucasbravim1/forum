@@ -7,10 +7,13 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,18 +54,27 @@ public class TopicRestController {
 	}
 
 	@RequestMapping(value = "/search/all", method = RequestMethod.GET)
-	public List<TopicDto> searchAllTopics(@RequestParam String orderBy, @RequestParam Integer page, @RequestParam Integer quantity) {
-		
-		Pageable pageable = PageRequest.of(page, quantity, Direction.DESC, orderBy);
+	@Cacheable("allTopics") // Não é boa prática utilizar o cache nesse caso.
+	public ResponseEntity<?> searchAllTopics(@RequestParam(required = false) String orderBy,
+			@PageableDefault(sort = "id", page = 0, size = 10, direction = Direction.ASC) Pageable pageable) {
 
-		Page<Topic> list = topicRepository.findAll(pageable);
 		TopicDto topicDto = new TopicDto();
+		Page<Topic> list;
 
-		return topicDto.toTopicDto(list);
+		if (orderBy == null) {
+			list = topicRepository.findAll(pageable);
+		} else {
+			pageable = PageRequest.of(0, 10, Direction.ASC, orderBy);
+			list = topicRepository.findAll(pageable);
+		}
+		System.out.println(orderBy == null ? "é null" : "não é null");
+		List<TopicDto> listTopicDtos = topicDto.toTopicDto(list);
+		return ResponseEntity.ok(listTopicDtos);
 
 	}
 
 	@RequestMapping(value = "/register{id}", method = RequestMethod.POST)
+	@CacheEvict("allTopics")
 	public ResponseEntity<TopicDto> registerTopic(@RequestBody @Valid RegisterTopicDto registerTopicDto,
 			UriComponentsBuilder uriComponentsBuilder) {
 
@@ -82,6 +94,7 @@ public class TopicRestController {
 	}
 
 	@RequestMapping(value = "/delete{id}", method = RequestMethod.DELETE)
+	@CacheEvict("allTopics")
 	public ResponseEntity<?> deleteTopic(@RequestParam Long id) {
 
 		Optional<Topic> topic = topicRepository.findById(id);
@@ -94,6 +107,7 @@ public class TopicRestController {
 	}
 
 	@RequestMapping(value = "/update{id}", method = RequestMethod.PUT)
+	@CacheEvict("allTopics")
 	public ResponseEntity<?> updateTopic(@RequestBody @Valid RegisterTopicDto registerTopicDto, @RequestParam Long id) {
 
 		Optional<Topic> optionalTopic = topicRepository.findById(id);
