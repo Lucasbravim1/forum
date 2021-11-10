@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @EnableSpringDataWebSupport
-@SpringBootApplication
+@SpringBootApplication // (exclude = SecurityAutoConfiguration.class)
 @EnableCaching
 public class ForumApplication {
 

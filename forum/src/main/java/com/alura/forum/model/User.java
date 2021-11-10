@@ -1,18 +1,29 @@
 package com.alura.forum.model;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Optional;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.alura.forum.dto.UserDto;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.alura.forum.dto.RegisterUserDto;
+import com.alura.forum.repository.UserProfileRepository;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
+
+	private static long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +41,32 @@ public class User {
 
 	private Integer solvedTopics;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	private UserProfile userProfile;
+
 	public User() {
 
 	}
 
-	public User(UserDto userDto) {
-		this.name = userDto.getName();
-		this.age = userDto.getAge();
-		this.email = userDto.getEmail();
+	public User(RegisterUserDto registerUserDto, UserProfileRepository userProfileRepository) {
+
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		String encodePassword = bCryptPasswordEncoder.encode(registerUserDto.getPassword());
+
+		this.name = registerUserDto.getName();
+		this.email = registerUserDto.getEmail();
+		this.age = registerUserDto.getAge();
+		this.entryDate = LocalDate.now();
+		this.password = encodePassword;
+		this.solvedTopics = 0;
+
+		Optional<UserProfile> visitant = userProfileRepository.findById((long) 2);
+		if (registerUserDto.getUserProfile() == null & visitant.isPresent()) {
+			this.userProfile = visitant.get();
+		} else {
+			this.userProfile = registerUserDto.getUserProfile();
+		}
+
 	}
 
 	public Long getId() {
@@ -58,10 +87,6 @@ public class User {
 
 	public String getPassword() {
 		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public Integer getAge() {
@@ -96,11 +121,52 @@ public class User {
 		this.solvedTopics = solvedTopics;
 	}
 
+//	public List<UserProfile> getUserProfile() {
+//		return userProfile;
+//	}
+
+	public static void setSerialversionuid(long serialversionuid) {
+		serialVersionUID = serialversionuid;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", age=" + age + ", email=" + email
 				+ ", entryDate=" + entryDate + ", solvedTopics=" + solvedTopics + "]";
 	}
-
 
 }

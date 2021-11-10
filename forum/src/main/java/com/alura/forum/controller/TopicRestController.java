@@ -79,10 +79,10 @@ public class TopicRestController {
 			UriComponentsBuilder uriComponentsBuilder) {
 
 		TopicDto topicDto = new TopicDto(registerTopicDto);
-		User user = userRepository.findByEmail(topicDto.getUserRequest().getEmail());
+		Optional<User> user = userRepository.findByEmail(topicDto.getUserRequest().getEmail());
 
-		if (user != null) {
-			Topic topic = new Topic(topicDto, user);
+		if (user.isPresent()) {
+			Topic topic = new Topic(topicDto, user.get());
 			topicRepository.save(topic);
 
 			URI uri = uriComponentsBuilder.path("topic/register").buildAndExpand(topic.getId()).toUri();
