@@ -2,6 +2,7 @@ package com.alura.forum.dto;
 
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserAuthenticationDto {
@@ -31,6 +32,10 @@ public class UserAuthenticationDto {
 	public Boolean validatePassword(String userPassword, String encryptedPassword) {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder.matches(userPassword, encryptedPassword);
+	}
+
+	public UsernamePasswordAuthenticationToken getCredencials() {
+		return new UsernamePasswordAuthenticationToken(this.email, this.password);
 	}
 
 }
