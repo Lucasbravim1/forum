@@ -23,7 +23,7 @@ import com.alura.forum.repository.UserProfileRepository;
 @Table(name = "users")
 public class User implements UserDetails {
 
-	private static long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2185662887514446549L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -126,7 +126,6 @@ public class User implements UserDetails {
 //	}
 
 	public static void setSerialversionuid(long serialversionuid) {
-		serialVersionUID = serialversionuid;
 	}
 
 	public void setPassword(String password) {
