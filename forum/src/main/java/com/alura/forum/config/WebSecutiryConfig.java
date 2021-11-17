@@ -13,7 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.alura.forum.filter.TokenAuthorizationFilter;
+import com.alura.forum.repository.UserRepository;
+import com.alura.forum.service.TokenService;
 import com.alura.forum.service.UserAutenticationService;
 
 @Configuration
@@ -26,6 +30,12 @@ public class WebSecutiryConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private UserRepository usuarioRepository;
 
 	@Override
 	@Bean
@@ -42,10 +52,16 @@ public class WebSecutiryConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/topic/*").permitAll()
-				.antMatchers(HttpMethod.POST, "/topic/*").permitAll().antMatchers(HttpMethod.POST, "/user/*")
-				.permitAll().antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated().and()
-				.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.authorizeRequests()
+//				.antMatchers(HttpMethod.GET, "/topic/*").permitAll()
+//				.antMatchers(HttpMethod.POST, "/topic/*").permitAll()
+//				.antMatchers(HttpMethod.POST, "/user/*").permitAll()
+				.antMatchers(HttpMethod.POST, "/login").permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.addFilterBefore(new TokenAuthorizationFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override

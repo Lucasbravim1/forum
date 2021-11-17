@@ -18,31 +18,33 @@ import com.alura.forum.dto.NullPointerValidationDto;
 
 @RestControllerAdvice
 public class ValidationErrorHandler {
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public List<NullPointerValidationDto> nullPointerHandle(MethodArgumentNotValidException exception) {
-		
+
 		List<NullPointerValidationDto> errors = new ArrayList<>();
 		List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-		
-		for(int i = 0; i < fieldErrors.size(); i++) {
+
+		for (int i = 0; i < fieldErrors.size(); i++) {
 			String message = messageSource.getMessage(fieldErrors.get(i), LocaleContextHolder.getLocale());
-			NullPointerValidationDto nullPointerValidationDto = new NullPointerValidationDto(fieldErrors.get(i).getField(), message);
+			NullPointerValidationDto nullPointerValidationDto = new NullPointerValidationDto(
+					fieldErrors.get(i).getField(), message);
 			errors.add(nullPointerValidationDto);
 		}
 		return errors;
 
 	}
-	
+
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public String nullIdHandle(MissingServletRequestParameterException exception){
-		
+	public String nullIdHandle(MissingServletRequestParameterException exception) {
+
 		return "The id must no be null";
-		
+
 	}
+
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alura.forum.dto.TokenDto;
 import com.alura.forum.dto.UserAuthenticationDto;
 import com.alura.forum.model.User;
 import com.alura.forum.repository.UserRepository;
@@ -53,17 +54,14 @@ public class LoginAuthenticationController {
 //		}
 //	}
 
-	//forma mais elegante --> usando Token
+	// forma mais elegante --> usando Token
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> authenticateUserToken(@RequestBody @Valid UserAuthenticationDto userAuthenticationDto) {
 		UsernamePasswordAuthenticationToken dataUser = userAuthenticationDto.getCredencials();
-
 		try {
 			Authentication authenticate = authenticationManager.authenticate(dataUser);
 			String token = tokenService.generateToken(authenticate);
-			System.out.println(token);
-			return new ResponseEntity<String>("The user is authenticated !"
-					+ "TOKEN: " + token, HttpStatus.OK);
+			return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 		} catch (AuthenticationException e) {
 			return new ResponseEntity<String>("User not found !", HttpStatus.NOT_FOUND);
 		}
